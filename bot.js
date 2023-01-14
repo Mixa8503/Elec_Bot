@@ -6,7 +6,7 @@ const request = require('request');
 const text = require('./text')
 const { token } = require("./token");
 const { default: axios } = require('axios');
-const { helpCommand } = require('./text');
+const { helpCommand, helpCommands } = require('./text');
 
 const Token = token.tok;
 // const url = "http://g20.k.vu/";
@@ -46,12 +46,13 @@ const parse = async () => {
     };
 
     bot.onText(/\/help/, msg => {
-        bot.sendMessage(msg.chat.id, "None here yet");
+        bot.sendMessage(msg.chat.id, helpCommands);
     });
 
     bot.onText(/\/ping/, msg => {
         bot.sendMessage(msg.chat.id, "pong");
     });
+
     parse();
     //"body > details:nth-child(13) > pre"
 });
