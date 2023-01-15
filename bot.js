@@ -4,7 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const cheerio = require('cheerio');
 const request = require('request');
 const text = require('./text')
-const debug = require('./func')
+const { debug, getData} = require('./func')
 const { token } = require("./token");
 const { default: axios } = require('axios');
 const { helpCommand, helpCommands, invalidInput } = require('./text');
@@ -16,8 +16,9 @@ console.log('Bot has been started..')
 
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт, " + msg.from.first_name + ". " + helpCommand);
+});
 
-const parse = async () => {
+    const parse = async () => {
         const getHTML = async(url) => {
             const { data } = await axios.get(url);
             return cheerio.load(data);
@@ -26,10 +27,18 @@ const parse = async () => {
         const LightStatus = $('#main > b > font').text().trim();
         const DurationOnlineOffline = $("body > p:nth-child(8) > span").text();
         const historyOnOff = $("body > details:nth-child(13) > pre").text();
-        const dateRegEx = /\b\w{3}, \d{1,2} \w{3} \d{4}\b/g;
-        const timeRegEx = /\b\d{2}:\d{2}:\d{2}\b/g;
-        const dates = historyOnOff.match(dateRegEx);
-        const times = historyOnOff.match(timeRegEx);
+        const updatedhistory = historyOnOff.split('+0200');
+        const newArr = updatedhistory.map(el => el.trim()).filter(el => el !== '');
+
+        const dates = {};
+        for(const el of newArr) {
+            const [ date ] = el.match(/\b\w{3}, \d{1,2} \w{3} \d{4}\b/g);
+            const [ status, time ] = el.split(date).map(el => el.trim());
+            if(dates[date] === undefined || null) {
+                dates[date] = {};
+            }
+            dates[date][time] = status;
+        }
 
         if(LightStatus === 'YES'){
             bot.onText(/\/check/, (msg) => {
@@ -48,24 +57,23 @@ const parse = async () => {
             });
         }
         bot.onText(/\/history (.+)/, (msg, [source, match]) => {
-            if(dates.indexOf(match) != -1){
-            bot.sendMessage(msg.chat.id, times[dates.indexOf(match)]);
-            // console.log(times[dates.indexOf(match)]);
+            if(dates[match] != undefined){
+                const out = `${match}\n${getData(match, dates)}`;
+                bot.sendMessage(msg.chat.id, out);
             }
             else{
                 bot.sendMessage(msg.chat.id, invalidInput);
             }
-            // bot.sendMessage(msg.chat.id, debug(match));
         });
-};
+
+        bot.onText(/\/history/, (msg) => {
+            if(msg.text == '/history'){
+                bot.sendMessage(msg.chat.id, invalidInput);
+            }
+        });
+    };
 
     bot.onText(/\/help/, msg => {
         bot.sendMessage(msg.chat.id, helpCommands);
     });
-
-    bot.onText(/\/ping/, msg => {
-        bot.sendMessage(msg.chat.id, "pong");
-    });
-
     parse();
-});
