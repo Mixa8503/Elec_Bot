@@ -14,11 +14,17 @@ const bot = new TelegramBot(Token, { polling: true });
 
 console.log('Bot has been started..')
 
+let checker = true;
+
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт, " + msg.from.first_name + ". " + helpCommand);
+    if(checker){
+        parse();
+        checker = false;
+    }
 });
 
-    const parse = async () => {
+    async function parse() { 
         const getHTML = async(url) => {
             const { data } = await axios.get(url);
             return cheerio.load(data);
@@ -76,4 +82,3 @@ bot.onText(/\/start/, (msg) => {
     bot.onText(/\/help/, msg => {
         bot.sendMessage(msg.chat.id, helpCommands);
     });
-    parse();
