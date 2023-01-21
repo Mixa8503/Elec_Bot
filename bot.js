@@ -2,7 +2,6 @@
 
 const TelegramBot = require('node-telegram-bot-api');
 const cheerio = require('cheerio');
-const request = require('request');
 const text = require('./text')
 const { debug, getData} = require('./func')
 const { token } = require("./token");
@@ -12,7 +11,7 @@ const { helpCommand, helpCommands, invalidInput } = require('./text');
 const Token = token.tok;
 const bot = new TelegramBot(Token, { polling: true });
 
-console.log('Bot has been started..')
+console.log('Bot has been started..');
 
 let checker = true;
 
@@ -31,8 +30,8 @@ bot.onText(/\/start/, (msg) => {
         };
         const $ = await getHTML('http://g20.k.vu/');
         const LightStatus = $('#main > b > font').text().trim();
-        const DurationOnlineOffline = $("body > p:nth-child(8) > span").text();
-        const historyOnOff = $("body > details:nth-child(13) > pre").text();
+        const DurationOnlineOffline = $('span.v').text();
+        const historyOnOff = $('body > details > pre').text();
         const updatedhistory = historyOnOff.split('+0200');
         const newArr = updatedhistory.map(el => el.trim()).filter(el => el !== '');
 
