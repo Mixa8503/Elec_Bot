@@ -12,5 +12,5 @@ module.exports = {
     negativeRecall: "Світла нема!",
     helpCommand: `Напиши ${help} щоб дізнатись усі доступні команди.`,
     helpCommands: `${commands.start}\n${commands.duration}\n${commands.check}\n${commands.history}`,
-    invalidInput: "Непправильно вказаний формат дати або немає такої дати у графіку відключень. Вкажіть дату у форматі 'ddd, DD MMM YYYY', наприклад '/history Sun, 15 Jan 2023'"
+    invalidInput: "Неправильно вказаний формат дати або немає такої дати у графіку відключень. Вкажіть дату у форматі 'ddd, DD MMM YYYY', наприклад /history Sun, 15 Jan 2023"
 };
