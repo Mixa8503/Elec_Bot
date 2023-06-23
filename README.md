@@ -1,6 +1,6 @@
 # Elec_Bot
 
-### This bot can help you find out if you have electricity in your house 
+### This bot can help you find out if you have electricity in your house and are there any problems with water in city
 
 ----------
 ## Example of usage
@@ -11,4 +11,4 @@
 ### You can find this bot by typing in search: @Elec_checker_bot
 ----------
 
-### Contributer : Lukianenko Mikhail
+### Contributer : Lukianenko Mykhailo
