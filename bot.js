@@ -81,7 +81,7 @@ websites.forEach((website) => {
 
   bot.onText(/\/duration/, async (msg) => {
     const { durationOnlineOffline } = await website.parse();
-    bot.sendMessage(msg.chat.id, `Duration: ${durationOnlineOffline}`);
+    bot.sendMessage(msg.chat.id, `Протягом  ${durationOnlineOffline}`);
   });
 
   bot.onText(/\/history (.+)/, async (msg, match) => {
