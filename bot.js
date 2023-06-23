@@ -68,24 +68,26 @@ const websites = [
 ];
 
 websites.forEach((website) => {
-    bot.onText(/\/check/, async (msg) => {
+  bot.onText(/\/check/, async (msg) => {
     const { lightStatus, durationOnlineOffline } = await website.parse();
     let message;
     if (lightStatus === 'YES') {
-    message = `Світло є вже: ${durationOnlineOffline}`;
+      message = `Світло є вже: ${durationOnlineOffline}`;
     } else {
-    message = `Світлa немає вже: ${durationOnlineOffline}`;
+      message = `Світлa немає вже: ${durationOnlineOffline}`;
     }
-      bot.sendMessage(msg.chat.id, message);
-    });
-  
-    bot.onText(/\/duration/, async (msg) => {
-      const { durationOnlineOffline } = await website.parse();
-      bot.sendMessage(msg.chat.id, `Duration: ${durationOnlineOffline}`);
-    });
+    bot.sendMessage(msg.chat.id, message);
+  });
+
+  bot.onText(/\/duration/, async (msg) => {
+    const { durationOnlineOffline } = await website.parse();
+    bot.sendMessage(msg.chat.id, `Duration: ${durationOnlineOffline}`);
   });
 
   bot.onText(/\/history (.+)/, async (msg, match) => {
+    console.log('match:', match);
+    console.log('match[1]:', match[1]);
+
     const { dates } = await website.parse();
     if (dates[match[1]] !== undefined) {
       const out = `${match[1]}\n${getData(match[1], dates)}`;
@@ -94,6 +96,7 @@ websites.forEach((website) => {
       bot.sendMessage(msg.chat.id, invalidInput);
     }
   });
+});
 
 bot.onText(/\/water/, async (msg) => {
   const { WaterNews } = await websites[1].parse();
@@ -107,7 +110,3 @@ bot.onText(/\/history/, (msg) => {
 bot.onText(/\/help/, (msg) => {
   bot.sendMessage(msg.chat.id, helpCommands);
 });
-
-
-
-
